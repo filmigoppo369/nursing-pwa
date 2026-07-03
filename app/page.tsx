@@ -106,13 +106,6 @@ export default function NursingApp() {
     }
   };
 
-  // Clear localStorage when test is submitted (at top level)
-  useEffect(() => {
-    if (mockTestSubmitted && typeof window !== 'undefined') {
-      localStorage.removeItem('mockTestAnswers');
-    }
-  }, [mockTestSubmitted]);
-
   // Timer effect
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -153,6 +146,7 @@ export default function NursingApp() {
     setShowRationale(false);
     setIsCorrect(null);
     setAttemptedQuestions(new Set());
+    // Clear localStorage when starting new test
     if (typeof window !== 'undefined') {
       localStorage.removeItem('mockTestAnswers');
     }
@@ -210,13 +204,23 @@ export default function NursingApp() {
   };
 
   const handleSubmitMockTest = () => {
+    // Save current answer first
     if (selectedAnswers.length > 0) {
       saveAnswerToStorage(currentIndex, selectedAnswers);
     }
+    // Wait a bit to ensure localStorage is updated, then navigate
     setTimeout(() => {
       setMockTestSubmitted(true);
       setCurrentView("results");
-    }, 200);
+    }, 300);
+  };
+
+  const handleBackToHome = () => {
+    // Clear localStorage when going back to home
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('mockTestAnswers');
+    }
+    setCurrentView("home");
   };
 
   const calculateResults = () => {
@@ -364,17 +368,17 @@ export default function NursingApp() {
               </div>
             </div>
             <p style={{ fontSize: "1.25rem", fontWeight: "600", color: results.percentage >= 70 ? "#10b981" : results.percentage >= 50 ? "#f59e0b" : "#ef4444", marginBottom: "0.5rem" }}>
-              {results.percentage >= 90 ? " Outstanding!" : results.percentage >= 70 ? "✅ Great Job!" : results.percentage >= 50 ? "📚 Good Effort!" : "💪 Keep Practicing!"}
+              {results.percentage >= 90 ? "🏆 Outstanding!" : results.percentage >= 70 ? "✅ Great Job!" : results.percentage >= 50 ? "📚 Good Effort!" : "💪 Keep Practicing!"}
             </p>
             <p style={{ color: "#6b7280", marginBottom: "1.5rem" }}>{results.percentage >= 70 ? "You're well prepared for your nursing exam!" : "Review the rationales and weak areas below to improve."}</p>
             <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <button onClick={() => setCurrentView("home")} style={{ backgroundColor: "#2563eb", color: "white", fontWeight: "700", padding: "0.75rem 2rem", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "1rem" }}>🏠 Back to Home</button>
+              <button onClick={handleBackToHome} style={{ backgroundColor: "#2563eb", color: "white", fontWeight: "700", padding: "0.75rem 2rem", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "1rem" }}>🏠 Back to Home</button>
               {isMockTest && <button onClick={startMockTest} style={{ backgroundColor: "#10b981", color: "white", fontWeight: "700", padding: "0.75rem 2rem", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "1rem" }}>🔄 Retake Mock Test</button>}
             </div>
           </div>
           {results.weakAreas.length > 0 && (
             <div style={{ backgroundColor: "#fef2f2", borderRadius: "16px", padding: "1.5rem", marginBottom: "1.5rem", border: "2px solid #ef4444" }}>
-              <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#991b1b", marginBottom: "1rem" }}>️ Areas Needing Improvement</h2>
+              <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#991b1b", marginBottom: "1rem" }}>⚠️ Areas Needing Improvement</h2>
               <p style={{ color: "#7f1d1d", marginBottom: "1rem" }}>Focus your study on these subjects:</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 {results.weakAreas.map((area, idx) => (
@@ -387,7 +391,7 @@ export default function NursingApp() {
             </div>
           )}
           <div style={{ backgroundColor: "white", borderRadius: "16px", padding: "1.5rem", marginBottom: "1.5rem", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1f2937", marginBottom: "1rem" }}> Subject-wise Performance</h2>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1f2937", marginBottom: "1rem" }}>📈 Subject-wise Performance</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
               {Object.entries(results.categoryResults).map(([category, data]) => {
                 const percentage = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
