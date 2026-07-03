@@ -86,6 +86,7 @@ export default function NursingApp() {
   const [mockTestStarted, setMockTestStarted] = useState(false);
   const [mockTestSubmitted, setMockTestSubmitted] = useState(false);
   const [mockTestAnswers, setMockTestAnswers] = useState<Record<number, string[]>>({});
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, string[]>>({});  //  ADD THIS LINE HERE
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -155,33 +156,40 @@ export default function NursingApp() {
     const correctIds = currentQuestion.options.filter((opt: any) => opt.isCorrect).map((opt: any) => opt.id);
     const isAnswerCorrect = selectedAnswers.length === correctIds.length && selectedAnswers.every((id) => correctIds.includes(id));
     setAttemptedQuestions((prev) => new Set([...prev, currentIndex]));
+    setQuizAnswers((prev) => ({ ...prev, [currentIndex]: selectedAnswers })); // 👈 Add this line
     setIsCorrect(isAnswerCorrect);
     setShowRationale(true);
   };
 
  const handleNavigate = (index: number) => {
+    // Save current answer if exists
     if (selectedAnswers.length > 0 && currentView === "mock") {
       setMockTestAnswers((prev) => ({ ...prev, [currentIndex]: selectedAnswers }));
+    } else if (selectedAnswers.length > 0 && currentView === "quiz") {
+      setQuizAnswers((prev) => ({ ...prev, [currentIndex]: selectedAnswers })); // 👈 Add this
     }
+    
     setCurrentIndex(index);
+    
+    // Load answer for the new index
     if (currentView === "mock") {
       setSelectedAnswers(mockTestAnswers[index] || []);
-    }
-    if (attemptedQuestions.has(index) && currentView === "quiz") {
+    } else if (currentView === "quiz" && attemptedQuestions.has(index)) {
+      // Restore quiz answer
+      const savedAnswer = quizAnswers[index] || [];  // 👈 Add this block
+      setSelectedAnswers(savedAnswer);
       setShowRationale(true);
       const question = currentQuestions[index];
       const correctIds = question.options.filter((opt: any) => opt.isCorrect).map((opt: any) => opt.id);
-      const savedAnswers = mockTestAnswers[index] || [];
-      setSelectedAnswers(savedAnswers);
-      const wasCorrect = savedAnswers.length === correctIds.length && savedAnswers.every((id) => correctIds.includes(id));
+      const wasCorrect = savedAnswer.length === correctIds.length && savedAnswer.every((id) => correctIds.includes(id));
       setIsCorrect(wasCorrect);
     } else {
       setShowRationale(false);
       setIsCorrect(null);
-      setSelectedAnswers([]); // Clear selected answers for new questions
+      setSelectedAnswers([]);
     }
   };
-  
+
   const handleSubmitMockTest = () => {
     if (selectedAnswers.length > 0) {
       setMockTestAnswers((prev) => ({ ...prev, [currentIndex]: selectedAnswers }));
