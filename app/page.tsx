@@ -159,7 +159,7 @@ export default function NursingApp() {
     setShowRationale(true);
   };
 
-  const handleNavigate = (index: number) => {
+ const handleNavigate = (index: number) => {
     if (selectedAnswers.length > 0 && currentView === "mock") {
       setMockTestAnswers((prev) => ({ ...prev, [currentIndex]: selectedAnswers }));
     }
@@ -171,14 +171,17 @@ export default function NursingApp() {
       setShowRationale(true);
       const question = currentQuestions[index];
       const correctIds = question.options.filter((opt: any) => opt.isCorrect).map((opt: any) => opt.id);
-      const wasCorrect = selectedAnswers.length === correctIds.length && selectedAnswers.every((id) => correctIds.includes(id));
+      const savedAnswers = mockTestAnswers[index] || [];
+      setSelectedAnswers(savedAnswers);
+      const wasCorrect = savedAnswers.length === correctIds.length && savedAnswers.every((id) => correctIds.includes(id));
       setIsCorrect(wasCorrect);
     } else {
       setShowRationale(false);
       setIsCorrect(null);
+      setSelectedAnswers([]); // Clear selected answers for new questions
     }
   };
-
+  
   const handleSubmitMockTest = () => {
     if (selectedAnswers.length > 0) {
       setMockTestAnswers((prev) => ({ ...prev, [currentIndex]: selectedAnswers }));
