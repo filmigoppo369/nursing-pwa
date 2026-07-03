@@ -69,7 +69,7 @@ const subjects = [
   { id: "anatomy", name: "Anatomy & Physiology", icon: "🫀" },
   { id: "psychology", name: "Psychology", icon: "💭" },
   { id: "nutrition", name: "Nutrition & Biochemistry", icon: "🥗" },
-  { id: "microbiology", name: "Microbiology/Infection Control", icon: "🦠" },
+  { id: "microbiology", name: "Microbiology/Infection Control", icon: "" },
 ];
 
 export default function NursingApp() {
@@ -85,11 +85,8 @@ export default function NursingApp() {
   const [timeRemaining, setTimeRemaining] = useState(1800);
   const [mockTestStarted, setMockTestStarted] = useState(false);
   const [mockTestSubmitted, setMockTestSubmitted] = useState(false);
-  
-  // NEW: Store all mock test answers in state (not just localStorage)
   const [mockTestAnswers, setMockTestAnswers] = useState<Record<number, string[]>>({});
 
-  // Timer effect
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (mockTestStarted && !mockTestSubmitted && timeRemaining > 0) {
@@ -129,7 +126,7 @@ export default function NursingApp() {
     setShowRationale(false);
     setIsCorrect(null);
     setAttemptedQuestions(new Set());
-    setMockTestAnswers({}); // Clear answers
+    setMockTestAnswers({});
     setTimeRemaining(1800);
     setMockTestStarted(true);
     setMockTestSubmitted(false);
@@ -147,21 +144,15 @@ export default function NursingApp() {
       newAnswers = [optionId];
     }
     setSelectedAnswers(newAnswers);
-    // Update BOTH state and localStorage
     if (currentView === "mock") {
       setMockTestAnswers((prev) => ({ ...prev, [currentIndex]: newAnswers }));
-      if (typeof window !== 'undefined') {
-        const allAnswers = JSON.parse(localStorage.getItem('mockTestAnswers') || '{}');
-        allAnswers[currentIndex] = newAnswers;
-        localStorage.setItem('mockTestAnswers', JSON.stringify(allAnswers));
-      }
     }
   };
 
   const handleSubmitAnswer = () => {
     if (selectedAnswers.length === 0) return;
     const currentQuestion = currentQuestions[currentIndex];
-    const correctIds = currentQuestion.options.filter((opt) => opt.isCorrect).map((opt) => opt.id);
+    const correctIds = currentQuestion.options.filter((opt: any) => opt.isCorrect).map((opt: any) => opt.id);
     const isAnswerCorrect = selectedAnswers.length === correctIds.length && selectedAnswers.every((id) => correctIds.includes(id));
     setAttemptedQuestions((prev) => new Set([...prev, currentIndex]));
     setIsCorrect(isAnswerCorrect);
@@ -169,27 +160,17 @@ export default function NursingApp() {
   };
 
   const handleNavigate = (index: number) => {
-    // Save current answer
     if (selectedAnswers.length > 0 && currentView === "mock") {
       setMockTestAnswers((prev) => ({ ...prev, [currentIndex]: selectedAnswers }));
-      if (typeof window !== 'undefined') {
-        const allAnswers = JSON.parse(localStorage.getItem('mockTestAnswers') || '{}');
-        allAnswers[currentIndex] = selectedAnswers;
-        localStorage.setItem('mockTestAnswers', JSON.stringify(allAnswers));
-      }
     }
-    
     setCurrentIndex(index);
-    
-    // Load answer for the new index
     if (currentView === "mock") {
       setSelectedAnswers(mockTestAnswers[index] || []);
     }
-    
     if (attemptedQuestions.has(index) && currentView === "quiz") {
       setShowRationale(true);
       const question = currentQuestions[index];
-      const correctIds = question.options.filter((opt) => opt.isCorrect).map((opt) => opt.id);
+      const correctIds = question.options.filter((opt: any) => opt.isCorrect).map((opt: any) => opt.id);
       const wasCorrect = selectedAnswers.length === correctIds.length && selectedAnswers.every((id) => correctIds.includes(id));
       setIsCorrect(wasCorrect);
     } else {
@@ -199,17 +180,9 @@ export default function NursingApp() {
   };
 
   const handleSubmitMockTest = () => {
-    // Save current answer
     if (selectedAnswers.length > 0) {
       setMockTestAnswers((prev) => ({ ...prev, [currentIndex]: selectedAnswers }));
-      if (typeof window !== 'undefined') {
-        const allAnswers = JSON.parse(localStorage.getItem('mockTestAnswers') || '{}');
-        allAnswers[currentIndex] = selectedAnswers;
-        localStorage.setItem('mockTestAnswers', JSON.stringify(allAnswers));
-      }
     }
-    
-    // Wait a tiny bit to ensure state is updated, then navigate
     setTimeout(() => {
       setMockTestSubmitted(true);
       setCurrentView("results");
@@ -218,23 +191,17 @@ export default function NursingApp() {
 
   const handleBackToHome = () => {
     setMockTestAnswers({});
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('mockTestAnswers');
-    }
     setCurrentView("home");
   };
 
   const calculateResults = () => {
-    // Use state variable first, fallback to localStorage
-    const answersToUse = Object.keys(mockTestAnswers).length > 0 ? mockTestAnswers : 
-      (typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('mockTestAnswers') || '{}') : {});
-    
+    const answersToUse = mockTestAnswers;
     let correctCount = 0;
     const categoryResults: Record<string, { correct: number; total: number }> = {};
 
     const results = currentQuestions.map((question, idx) => {
       const userAnswer = answersToUse[idx] || [];
-      const correctIds = question.options.filter((opt) => opt.isCorrect).map((opt) => opt.id);
+      const correctIds = question.options.filter((opt: any) => opt.isCorrect).map((opt: any) => opt.id);
       const isAnswerCorrect = userAnswer.length === correctIds.length && userAnswer.every((id) => correctIds.includes(id));
       if (isAnswerCorrect) correctCount++;
       if (!categoryResults[question.category]) categoryResults[question.category] = { correct: 0, total: 0 };
@@ -266,7 +233,6 @@ export default function NursingApp() {
   const isLastQuestion = currentIndex === currentQuestions.length - 1;
   const progress = currentQuestions.length > 0 ? ((currentIndex + 1) / currentQuestions.length) * 100 : 0;
 
-  // HOME PAGE
   if (currentView === "home") {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb", padding: "2rem" }}>
@@ -300,7 +266,6 @@ export default function NursingApp() {
     );
   }
 
-  // MOCK TEST VIEW
   if (currentView === "mock" && mockTestStarted && !mockTestSubmitted) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb", padding: "1rem" }}>
@@ -316,7 +281,7 @@ export default function NursingApp() {
           </div>
           <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1f2937", marginBottom: "1.5rem" }}>{currentQuestion.stem}</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.5rem" }}>
-            {currentQuestion.options.map((option) => {
+            {currentQuestion.options.map((option: any) => {
               const isSelected = selectedAnswers.includes(option.id);
               return (
                 <button key={option.id} onClick={() => handleSelect(option.id)} style={{ width: "100%", textAlign: "left", padding: "1rem", borderRadius: "12px", border: `2px solid ${isSelected ? "#3b82f6" : "#e5e7eb"}`, backgroundColor: isSelected ? "#eff6ff" : "white", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.75rem", transition: "all 0.2s" }}>
@@ -354,7 +319,6 @@ export default function NursingApp() {
     );
   }
 
-  // RESULTS PAGE
   if (currentView === "results") {
     const results = calculateResults();
     const isMockTest = mockTestQuestions.length > 0 && mockTestSubmitted;
@@ -371,7 +335,7 @@ export default function NursingApp() {
               </div>
             </div>
             <p style={{ fontSize: "1.25rem", fontWeight: "600", color: results.percentage >= 70 ? "#10b981" : results.percentage >= 50 ? "#f59e0b" : "#ef4444", marginBottom: "0.5rem" }}>
-              {results.percentage >= 90 ? "🏆 Outstanding!" : results.percentage >= 70 ? "✅ Great Job!" : results.percentage >= 50 ? "📚 Good Effort!" : "💪 Keep Practicing!"}
+              {results.percentage >= 90 ? " Outstanding!" : results.percentage >= 70 ? "✅ Great Job!" : results.percentage >= 50 ? "📚 Good Effort!" : "💪 Keep Practicing!"}
             </p>
             <p style={{ color: "#6b7280", marginBottom: "1.5rem" }}>{results.percentage >= 70 ? "You're well prepared for your nursing exam!" : "Review the rationales and weak areas below to improve."}</p>
             <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
@@ -416,8 +380,8 @@ export default function NursingApp() {
             <h2 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#1f2937", marginBottom: "1.5rem" }}>📝 Detailed Review</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               {results.results.map((result, idx) => {
-                const userAnswerOptions = result.userAnswer.length > 0 ? result.options.filter((opt) => result.userAnswer.includes(opt.id)) : [];
-                const correctAnswerOptions = result.options.filter((opt) => result.correctAnswer.includes(opt.id));
+                const userAnswerOptions = result.userAnswer.length > 0 ? result.options.filter((opt: any) => result.userAnswer.includes(opt.id)) : [];
+                const correctAnswerOptions = result.options.filter((opt: any) => result.correctAnswer.includes(opt.id));
                 return (
                   <div key={idx} style={{ padding: "1.5rem", borderRadius: "12px", border: `2px solid ${result.isCorrect ? "#10b981" : "#ef4444"}`, backgroundColor: result.isCorrect ? "#f0fdf4" : "#fef2f2" }}>
                     <div style={{ display: "flex", alignItems: "center", marginBottom: "0.75rem" }}>
@@ -430,11 +394,11 @@ export default function NursingApp() {
                     <p style={{ color: "#374151", marginBottom: "0.75rem", fontWeight: "500" }}>{result.question}</p>
                     <div style={{ fontSize: "0.875rem", marginBottom: "0.75rem" }}>
                       <p style={{ color: result.isCorrect ? "#166534" : "#991b1b", marginBottom: "0.25rem", fontWeight: "600" }}>
-                        <strong>Your Answer:</strong> {userAnswerOptions.length > 0 ? userAnswerOptions.map(opt => `${opt.id}. ${opt.text}`).join(", ") : "Not answered"}
+                        <strong>Your Answer:</strong> {userAnswerOptions.length > 0 ? userAnswerOptions.map((opt: any) => `${opt.id}. ${opt.text}`).join(", ") : "Not answered"}
                       </p>
                       {!result.isCorrect && correctAnswerOptions.length > 0 && (
                         <p style={{ color: "#166534", marginBottom: "0.25rem", fontWeight: "600" }}>
-                          <strong>Correct Answer:</strong> {correctAnswerOptions.map(opt => `${opt.id}. ${opt.text}`).join(", ")}
+                          <strong>Correct Answer:</strong> {correctAnswerOptions.map((opt: any) => `${opt.id}. ${opt.text}`).join(", ")}
                         </p>
                       )}
                     </div>
@@ -453,7 +417,6 @@ export default function NursingApp() {
     );
   }
 
-  // SUBJECT QUIZ VIEW
   const subject = subjects.find(s => s.id === selectedCategory);
   if (!currentQuestion) return <div style={{ padding: "2rem", textAlign: "center" }}>Loading questions...</div>;
 
@@ -473,7 +436,7 @@ export default function NursingApp() {
         </div>
         <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1f2937", marginBottom: "1.5rem" }}>{currentQuestion.stem}</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.5rem" }}>
-          {currentQuestion.options.map((option) => {
+          {currentQuestion.options.map((option: any) => {
             const isSelected = selectedAnswers.includes(option.id);
             const showCorrect = showRationale && option.isCorrect;
             const showWrong = showRationale && isSelected && !option.isCorrect;
@@ -495,7 +458,7 @@ export default function NursingApp() {
         {showRationale && (
           <div style={{ padding: "1rem", borderRadius: "12px", marginBottom: "1.5rem", borderLeft: `4px solid ${isCorrect ? "#22c55e" : "#ef4444"}`, backgroundColor: isCorrect ? "#f0fdf4" : "#fef2f2" }}>
             <p style={{ fontWeight: "700", marginBottom: "0.5rem", color: isCorrect ? "#166534" : "#991b1b" }}>{isCorrect ? "✅ Correct!" : "❌ Incorrect"}</p>
-            <p style={{ color: "#1e40af", fontWeight: "600", marginBottom: "0.5rem", backgroundColor: "#dbeafe", padding: "0.5rem", borderRadius: "6px" }}>📌 Correct Answer: {currentQuestion.options.filter((opt) => opt.isCorrect).map((opt) => `Option ${opt.id} - ${opt.text}`).join(", ")}</p>
+            <p style={{ color: "#1e40af", fontWeight: "600", marginBottom: "0.5rem", backgroundColor: "#dbeafe", padding: "0.5rem", borderRadius: "6px" }}>📌 Correct Answer: {currentQuestion.options.filter((opt: any) => opt.isCorrect).map((opt: any) => `Option ${opt.id} - ${opt.text}`).join(", ")}</p>
             <p style={{ color: "#374151", fontSize: "0.875rem" }}><strong>Rationale:</strong> {currentQuestion.rationale}</p>
           </div>
         )}
