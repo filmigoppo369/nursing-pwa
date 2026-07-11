@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "NursePrep MCQs",
-  description: "Ace your nursing exams with practice questions",
-  manifest: "/manifest.json",
+  title: "MONTASTIC",
+  description: "BY NURSE, FOR NURSE, OF NURSE",
 };
 
 export default function RootLayout({
@@ -14,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body>
         {children}
       </body>
     </html>
