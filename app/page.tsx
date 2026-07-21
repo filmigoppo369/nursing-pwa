@@ -311,55 +311,185 @@ export default function NursingApp() {
     );
   }
 
-  if (currentView === "home") {
-    return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb", padding: "2rem" }}>
-        <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-          <h1 style={{ fontSize: "2.5rem", fontWeight: "700", color: "#1f2937", textAlign: "center", marginBottom: "0.5rem" }}>MONTASTIC</h1>
-          <p style={{ textAlign: "center", color: "#6b7280", marginBottom: "2rem", fontSize: "1.1rem" }}>BY NURSE, FOR NURSE, OF NURSE</p>
-          
-          <div style={{ backgroundColor: "#1f2937", borderRadius: "16px", padding: "2rem", textAlign: "center", marginBottom: "2rem", boxShadow: "0 10px 25px rgba(0,0,0,0.1)" }}>
-            <h2 style={{ color: "white", fontSize: "1.5rem", marginBottom: "0.5rem" }}>🎯 Full Mock Test</h2>
-            <p style={{ color: "#9ca3af", marginBottom: "1rem" }}>50 Random Questions | 30 Minutes | Comprehensive Analysis</p>
-            <button onClick={startMockTest} style={{ backgroundColor: "#10b981", color: "white", fontWeight: "700", padding: "1rem 3rem", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "1.1rem", transition: "transform 0.2s" }} onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"} onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}>Start Mock Test</button>
-          </div>
+if (currentView === "home") {
+  return (
+    // ✅ CORRECT - Use only shorthand
+<div style={{ 
+  padding: "2rem 2rem 1rem 2rem" 
+}}>
+      <div style={{ maxWidth: "100%", margin: "0 auto" }}>  
+        <h1 style={{ 
+          fontSize: "2rem",  // Slightly smaller for mobile
+          fontWeight: "700", 
+          color: "#1f2937", 
+          textAlign: "center", 
+          marginBottom: "0.5rem" 
+        }}>
+          MONTASTIC
+        </h1>
+        <p style={{ 
+          textAlign: "center", 
+          color: "#6b7280", 
+          marginBottom: "1.5rem", 
+          fontSize: "1rem" 
+        }}>
+          BY NURSE, FOR NURSE, OF NURSE
+        </p>
+        
+        {/* Mock Test Card - Centered */}
+        <div style={{ 
+          backgroundColor: "#1f2937", 
+          borderRadius: "12px", 
+          padding: "1.25rem 1.5rem",
+          textAlign: "center", 
+          boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+          maxWidth: "100%",
+          margin: "0 auto 1.5rem auto"  // Center the card
+        }}>
+          <h2 style={{ 
+            color: "white", 
+            fontSize: "1.25rem",
+            marginBottom: "0.5rem",
+            fontWeight: "700"
+          }}>
+            🎯 Full Mock Test
+          </h2>
+          <p style={{ 
+            color: "#d1d5db", 
+            marginBottom: "1rem",
+            fontSize: "0.85rem",
+            lineHeight: "1.4",
+            fontWeight: "500"
+          }}>
+            50 Questions | 30 Minutes | -1/3 Negative Marking | Result Analysis
+          </p>
+          <button 
+            onClick={startMockTest} 
+            style={{ 
+              backgroundColor: "#10b981", 
+              color: "white", 
+              fontWeight: "700", 
+              padding: "0.75rem 2rem",
+              borderRadius: "10px", 
+              border: "none", 
+              cursor: "pointer", 
+              fontSize: "1rem",
+              transition: "transform 0.2s",
+              width: "100%",
+              maxWidth: "260px"
+            }} 
+            onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.03)"} 
+            onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+          >
+            Start Mock Test
+          </button>
+        </div>
 
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#1f2937", marginBottom: "1.5rem" }}>Choose Your Subject</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>
-            {subjects.map((subject) => {
-              const questionCount = categoryCounts[subject.id] || 0;
-              return (
-                <button key={subject.id} onClick={() => startSubjectQuiz(subject.id)} style={{ backgroundColor: "white", borderRadius: "12px", padding: "1.5rem", border: "2px solid #e5e7eb", cursor: "pointer", textAlign: "left", transition: "all 0.2s", boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = "#3b82f6"; e.currentTarget.style.transform = "translateY(-4px)"; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.transform = "translateY(0)"; }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    <span style={{ fontSize: "2.5rem" }}>{subject.icon}</span>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontWeight: "700", color: "#1f2937", marginBottom: "0.25rem" }}>{subject.name}</h3>
-                      <p style={{ color: "#6b7280", fontSize: "0.875rem" }}>
-                        {categoriesLoading ? 'Loading...' : `${questionCount} Questions`}
-                      </p>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+        <h2 style={{ 
+          fontSize: "1.25rem", 
+          fontWeight: "700", 
+          color: "#1f2937", 
+          marginBottom: "1rem",
+          textAlign: "center"  // Center the heading
+        }}>
+          Choose Your Subject
+        </h2>
+        
+        {/* 2-Column Grid - Properly Aligned */}
+        <div style={{ 
+          display: "grid", 
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "0.625rem",  // Reduced gap for mobile (10px)
+          width: "100%",
+          maxWidth: "100%"
+        }}>
+          {subjects.map((subject) => {
+            const questionCount = categoryCounts[subject.id] || 0;
+            return (
+              <button 
+                key={subject.id} 
+                onClick={() => startSubjectQuiz(subject.id)} 
+                style={{ 
+                  backgroundColor: "white", 
+                  borderRadius: "12px", 
+                  padding: "0.875rem",  // Reduced padding
+                  border: "2px solid #e5e7eb", 
+                  cursor: "pointer", 
+                  textAlign: "center",  // Center align content
+                  transition: "all 0.2s", 
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                  minHeight: "110px",  // Reduced height
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%"  // Ensure full width within grid cell
+                }} 
+                onMouseOver={(e) => { 
+                  e.currentTarget.style.borderColor = "#3b82f6"; 
+                  e.currentTarget.style.transform = "translateY(-2px)"; 
+                }} 
+                onMouseOut={(e) => { 
+                  e.currentTarget.style.borderColor = "#e5e7eb"; 
+                  e.currentTarget.style.transform = "translateY(0)"; 
+                }}
+              >
+                <span style={{ fontSize: "1.75rem", marginBottom: "0.375rem" }}>{subject.icon}</span>
+                <h3 style={{ 
+                  fontWeight: "700", 
+                  color: "#1f2937", 
+                  marginBottom: "0.25rem", 
+                  fontSize: "0.8125rem",  // Smaller font (13px)
+                  lineHeight: "1.2",
+                  margin: "0 0 0.25rem 0"
+                }}>
+                  {subject.name}
+                </h3>
+                <p style={{ 
+                  color: "#6b7280", 
+                  fontSize: "0.6875rem",  // Smaller font (11px)
+                  margin: 0,
+                  fontWeight: "500"
+                }}>
+                  {categoriesLoading ? 'Loading...' : `${questionCount} Qs`}
+                </p>
+              </button>
+            );
+          })}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (currentView === "mock" && mockTestStarted && !mockTestSubmitted) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb", padding: "1rem" }}>
         <div style={{ maxWidth: "800px", margin: "0 auto", backgroundColor: "white", borderRadius: "16px", boxShadow: "0 10px 25px rgba(0,0,0,0.1)", padding: "1.5rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", padding: "1rem", backgroundColor: timeRemaining < 300 ? "#fef2f2" : "#eff6ff", borderRadius: "12px", border: `2px solid ${timeRemaining < 300 ? "#ef4444" : "#3b82f6"}` }}>
-            <div>
-              <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "0.25rem" }}>Mock Test - Question {currentIndex + 1} of {mockTestQuestions.length}</p>
-              <div style={{ width: "200px", height: "8px", backgroundColor: "#e5e7eb", borderRadius: "4px" }}>
-                <div style={{ width: `${progress}%`, height: "100%", backgroundColor: "#3b82f6", borderRadius: "4px" }}></div>
-              </div>
+          {/* Timer Display - Red Rectangle at Top */}
+          <div style={{ 
+            backgroundColor: "#dc2626", 
+            color: "white", 
+            padding: "0.75rem", 
+            borderRadius: "8px", 
+            textAlign: "center", 
+            marginBottom: "1rem",
+            fontSize: "1.5rem",
+            fontWeight: "700",
+            fontFamily: "monospace",
+            boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+          }}>
+            ⏱️ {formatTime(timeRemaining)}
+          </div>
+
+          {/* Question Number and Progress Bar */}
+          <div style={{ marginBottom: "1.5rem", textAlign: "center" }}>
+            <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "0.5rem", fontWeight: "600" }}>
+              Mock Test - Question {currentIndex + 1} of {mockTestQuestions.length}
+            </p>
+            <div style={{ width: "100%", height: "8px", backgroundColor: "#e5e7eb", borderRadius: "4px", overflow: "hidden" }}>
+              <div style={{ width: `${progress}%`, height: "100%", backgroundColor: "#3b82f6", borderRadius: "4px", transition: "width 0.3s ease" }}></div>
             </div>
-            <div style={{ fontSize: "2rem", fontWeight: "700", color: timeRemaining < 300 ? "#ef4444" : "#1f2937", fontFamily: "monospace" }}>{formatTime(timeRemaining)}</div>
           </div>
 
           <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1f2937", marginBottom: "1.5rem" }}>{currentQuestion.stem}</h2>
@@ -463,186 +593,236 @@ export default function NursingApp() {
 
   if (currentView === "results" && mockTestResults) {
     return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb", padding: "2rem" }}>
-        <div style={{ maxWidth: "800px", margin: "0 auto", backgroundColor: "white", borderRadius: "16px", boxShadow: "0 10px 25px rgba(0,0,0,0.1)", padding: "2rem" }}>
-          <h2 style={{ fontSize: "2rem", fontWeight: "700", color: "#1f2937", textAlign: "center", marginBottom: "1.5rem" }}>
-            Mock Test Results
-          </h2>
+ 
+<div style={{ 
+  padding: "2rem 2rem 1rem 2rem" 
+}}>
+        <div style={{ maxWidth: "800px", margin: "0 auto", backgroundColor: "white", borderRadius: "16px", boxShadow: "0 10px 25px rgba(0,0,0,0.1)", padding: "1.5rem" }}>
+        
+        {/* Buttons at the top */}
+        <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", marginBottom: "1.5rem" }}>
+          <button 
+            onClick={handleBackToHome} 
+            style={{ 
+              flex: 1, 
+              padding: "0.75rem 1rem", 
+              backgroundColor: "#3b82f6", 
+              color: "white", 
+              border: "none", 
+              borderRadius: "8px", 
+              fontWeight: "700", 
+              cursor: "pointer",
+              fontSize: "0.875rem"
+            }}
+          >
+            ← Back to Home
+          </button>
+          <button 
+            onClick={startMockTest} 
+            style={{ 
+              flex: 1, 
+              padding: "0.75rem 1rem", 
+              backgroundColor: "#10b981", 
+              color: "white", 
+              border: "none", 
+              borderRadius: "8px", 
+              fontWeight: "700", 
+              cursor: "pointer",
+              fontSize: "0.875rem"
+            }}
+          >
+            Retake Test
+          </button>
+        </div>
 
-          <div style={{
-            backgroundColor: mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "#10b981" : "#ef4444",
-            color: "white",
-            padding: "2.5rem",
-            borderRadius: "12px",
-            textAlign: "center",
-            marginBottom: "2rem",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+        <h2 style={{ 
+          fontSize: "1.5rem", 
+          fontWeight: "700", 
+          color: "#1f2937", 
+          textAlign: "center", 
+          marginBottom: "1.5rem" 
+        }}>
+          Mock Test Results
+        </h2>
+
+        {/* Compact Red/Green Score Card */}
+        <div style={{
+          backgroundColor: mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "#10b981" : "#ef4444",
+          color: "white",
+          padding: "1.25rem 1rem",
+          borderRadius: "12px",
+          textAlign: "center",
+          marginBottom: "1.5rem",
+          boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+        }}>
+          <p style={{ 
+            fontSize: "0.9375rem", 
+            color: "rgba(255,255,255,0.95)", 
+            marginBottom: "0.5rem",
+            fontWeight: "600"
           }}>
-            <p style={{ fontSize: "1.25rem", color: "rgba(255,255,255,0.9)", marginBottom: "0.5rem" }}>
-              Your Score (with Negative Marking)
-            </p>
-            <h1 style={{ fontSize: "5rem", fontWeight: "800", margin: "1rem 0", lineHeight: 1 }}>
-              {mockTestResults.score.toFixed(2)}
-            </h1>
-            <p style={{ fontSize: "1.5rem", opacity: 0.9, margin: "0.5rem 0" }}>
-              out of {mockTestResults.maxScore} marks
-            </p>
-            <div style={{ marginTop: "1.5rem", paddingTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.2)" }}>
-              <p style={{ fontSize: "1rem", margin: 0 }}>
-                Correct: {mockTestResults.correct} | Wrong: {mockTestResults.wrong} | Skipped: {mockTestResults.skipped}
-              </p>
-              <p style={{ fontSize: "0.875rem", marginTop: "0.5rem", opacity: 0.9 }}>
-                Scoring: +1 for correct, -0.33 for wrong, 0 for skipped
-              </p>
-            </div>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
-            <div style={{ backgroundColor: "#ecfdf5", padding: "1.5rem", borderRadius: "12px", textAlign: "center", border: "2px solid #10b981" }}>
-              <p style={{ color: "#059669", fontWeight: "700", fontSize: "2.5rem", margin: 0 }}>{mockTestResults.correct}</p>
-              <p style={{ color: "#065f46", fontSize: "0.875rem", margin: "0.25rem 0 0 0" }}>Correct Answers</p>
-              <p style={{ color: "#059669", fontWeight: "600", fontSize: "1.125rem", margin: "0.25rem 0 0 0" }}>+{mockTestResults.correct}.00 marks</p>
-            </div>
-            
-            <div style={{ backgroundColor: "#fef2f2", padding: "1.5rem", borderRadius: "12px", textAlign: "center", border: "2px solid #ef4444" }}>
-              <p style={{ color: "#dc2626", fontWeight: "700", fontSize: "2.5rem", margin: 0 }}>{mockTestResults.wrong}</p>
-              <p style={{ color: "#991b1b", fontSize: "0.875rem", margin: "0.25rem 0 0 0" }}>Wrong Answers</p>
-              <p style={{ color: "#dc2626", fontWeight: "600", fontSize: "1.125rem", margin: "0.25rem 0 0 0" }}>-{(mockTestResults.wrong * 0.33).toFixed(2)} marks</p>
-            </div>
-            
-            <div style={{ backgroundColor: "#f3f4f6", padding: "1.5rem", borderRadius: "12px", textAlign: "center", border: "2px solid #6b7280" }}>
-              <p style={{ color: "#4b5563", fontWeight: "700", fontSize: "2.5rem", margin: 0 }}>{mockTestResults.skipped}</p>
-              <p style={{ color: "#1f2937", fontSize: "0.875rem", margin: "0.25rem 0 0 0" }}>Skipped</p>
-              <p style={{ color: "#6b7280", fontWeight: "600", fontSize: "1.125rem", margin: "0.25rem 0 0 0" }}>0.00 marks</p>
-            </div>
-          </div>
-
-          <div style={{
-            backgroundColor: mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "#ecfdf5" :
-                             mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "#fef3c7" : "#fef2f2",
-            padding: "1.5rem",
-            borderRadius: "12px",
-            textAlign: "center",
-            marginBottom: "2rem",
-            border: `2px solid ${mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "#10b981" :
-                             mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "#f59e0b" : "#ef4444"}`
+            Your Score
+          </p>
+          <h1 style={{ 
+            fontSize: "3.5rem", 
+            fontWeight: "800", 
+            margin: "0.5rem 0", 
+            lineHeight: 1,
+            textAlign: "center"
           }}>
-            <h3 style={{
-              fontSize: "1.5rem",
-              fontWeight: "700",
-              color: mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "#059669" :
-                     mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "#d97706" : "#dc2626",
-              margin: "0 0 0.5rem 0"
-            }}>
-              {mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "🎉 Excellent Work!" :
-               mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "👍 Good Effort!" : "💪 Keep Practicing!"}
-            </h3>
-            <p style={{ color: "#6b7280", fontSize: "0.875rem", margin: 0 }}>
-              {mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "You're well prepared for your exam!" :
-               mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "Review the weak areas below to improve." :
-               "Focus on the areas needing improvement and try again!"}
+            {mockTestResults.score.toFixed(2)}
+          </h1>
+          <p style={{ 
+            fontSize: "1rem", 
+            opacity: 0.95, 
+            margin: "0.5rem 0" 
+          }}>
+            out of {mockTestResults.maxScore} marks
+          </p>
+          <div style={{ 
+            marginTop: "0.75rem", 
+            paddingTop: "0.75rem", 
+            borderTop: "1px solid rgba(255,255,255,0.3)",
+            fontSize: "0.8125rem"
+          }}>
+            <p style={{ margin: "0.25rem 0" }}>
+              Scoring: +1 correct, -0.33 wrong
             </p>
           </div>
+        </div>
 
-          <div style={{ marginTop: "2rem", borderTop: "2px solid #e5e7eb", paddingTop: "2rem" }}>
-            <h3 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#1f2937", marginBottom: "1.5rem" }}>
-               Detailed Question Review
-            </h3>
-            
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxHeight: "600px", overflowY: "auto" }}>
-              {mockTestQuestions.map((question, idx) => {
-                const userAnswer = mockTestAnswers[idx] || [];
-                const isCorrect = userAnswer[0] === question.correctAnswerKey;
-                
-                return (
-                  <div 
-                    key={idx} 
-                    style={{
-                      padding: "1.5rem",
-                      borderRadius: "12px",
-                      border: `2px solid ${isCorrect ? "#10b981" : "#ef4444"}`,
-                      backgroundColor: isCorrect ? "#f0fdf4" : "#fef2f2"
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                      <span style={{ fontWeight: "700", fontSize: "1.125rem", color: isCorrect ? "#059669" : "#dc2626" }}>
-                        Question {idx + 1}
-                      </span>
-                      <span style={{ 
-                        padding: "0.25rem 0.75rem", 
-                        borderRadius: "6px", 
-                        fontSize: "0.875rem",
-                        fontWeight: "600",
-                        backgroundColor: isCorrect ? "#10b981" : "#ef4444",
-                        color: "white"
-                      }}>
-                        {isCorrect ? "✓ Correct" : "✗ Incorrect"}
-                      </span>
-                    </div>
+        {/* Rest of the results cards remain the same... */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "0.75rem", marginBottom: "1.5rem" }}>
+          <div style={{ backgroundColor: "#ecfdf5", padding: "1.25rem", borderRadius: "12px", textAlign: "center", border: "2px solid #10b981" }}>
+            <p style={{ color: "#059669", fontWeight: "700", fontSize: "2rem", margin: 0 }}>{mockTestResults.correct}</p>
+            <p style={{ color: "#065f46", fontSize: "0.8125rem", margin: "0.25rem 0 0 0" }}>Correct</p>
+            <p style={{ color: "#059669", fontWeight: "600", fontSize: "0.9375rem", margin: "0.25rem 0 0 0" }}>+{mockTestResults.correct}.00</p>
+          </div>
+          
+          <div style={{ backgroundColor: "#fef2f2", padding: "1.25rem", borderRadius: "12px", textAlign: "center", border: "2px solid #ef4444" }}>
+            <p style={{ color: "#dc2626", fontWeight: "700", fontSize: "2rem", margin: 0 }}>{mockTestResults.wrong}</p>
+            <p style={{ color: "#991b1b", fontSize: "0.8125rem", margin: "0.25rem 0 0 0" }}>Wrong</p>
+            <p style={{ color: "#dc2626", fontWeight: "600", fontSize: "0.9375rem", margin: "0.25rem 0 0 0" }}>-{(mockTestResults.wrong * 0.33).toFixed(2)}</p>
+          </div>
+          
+          <div style={{ backgroundColor: "#f3f4f6", padding: "1.25rem", borderRadius: "12px", textAlign: "center", border: "2px solid #6b7280" }}>
+            <p style={{ color: "#4b5563", fontWeight: "700", fontSize: "2rem", margin: 0 }}>{mockTestResults.skipped}</p>
+            <p style={{ color: "#1f2937", fontSize: "0.8125rem", margin: "0.25rem 0 0 0" }}>Skipped</p>
+            <p style={{ color: "#6b7280", fontWeight: "600", fontSize: "0.9375rem", margin: "0.25rem 0 0 0" }}>0.00</p>
+          </div>
+        </div>
 
-                    <p style={{ fontSize: "1rem", fontWeight: "600", color: "#1f2937", marginBottom: "1rem", lineHeight: "1.5" }}>
-                      {question.stem}
-                    </p>
+        {/* Performance message */}
+        <div style={{
+          backgroundColor: mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "#ecfdf5" :
+                           mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "#fef3c7" : "#fef2f2",
+          padding: "1.25rem",
+          borderRadius: "12px",
+          textAlign: "center",
+          marginBottom: "1.5rem",
+          border: `2px solid ${mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "#10b981" :
+                           mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "#f59e0b" : "#ef4444"}`
+        }}>
+          <h3 style={{
+            fontSize: "1.25rem",
+            fontWeight: "700",
+            color: mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "#059669" :
+                   mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "#d97706" : "#dc2626",
+            margin: "0 0 0.5rem 0"
+          }}>
+            {mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "🎉 Excellent Work!" :
+             mockTestResults.score >= mockTestResults.maxScore * 0.5 ? " Good Effort!" : "💪 Keep Practicing!"}
+          </h3>
+          <p style={{ color: "#6b7280", fontSize: "0.8125rem", margin: 0 }}>
+            {mockTestResults.score >= mockTestResults.maxScore * 0.7 ? "You're well prepared!" :
+             mockTestResults.score >= mockTestResults.maxScore * 0.5 ? "Review weak areas to improve." :
+             "Focus on areas needing improvement!"}
+          </p>
+        </div>
 
-                    <div style={{ marginBottom: "0.75rem" }}>
-                      <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "0.25rem" }}>
-                        <strong>Your Answer:</strong>
-                      </p>
-                      <p style={{ fontSize: "0.9375rem", color: isCorrect ? "#059669" : "#dc2626", fontWeight: "600" }}>
-                        {userAnswer.length > 0 
-                          ? userAnswer.map((id: string) => {
-                              const option = question.options.find((opt: any) => opt.id === id);
-                              return `${id}. ${option?.text}`;
-                            }).join(", ")
-                          : "Not answered"
-                        }
-                      </p>
-                    </div>
-
-                    <div style={{ marginBottom: "1rem" }}>
-                      <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "0.25rem" }}>
-                        <strong>Correct Answer:</strong>
-                      </p>
-                      <p style={{ fontSize: "0.9375rem", color: "#059669", fontWeight: "600" }}>
-                        {question.options.filter((opt: any) => opt.id === question.correctAnswerKey).map((opt: any) => `${opt.id}. ${opt.text}`).join(", ")}
-                      </p>
-                    </div>
-
-                    {question.rationale && (
-                      <div style={{ backgroundColor: "#dbeafe", padding: "1rem", borderRadius: "8px", borderLeft: "4px solid #3b82f6" }}>
-                        <p style={{ fontSize: "0.875rem", fontWeight: "700", color: "#1e40af", marginBottom: "0.5rem" }}>
-                           Rationale:
-                        </p>
-                        <p style={{ fontSize: "0.875rem", color: "#1e3a8a", lineHeight: "1.6" }}>
-                          {question.rationale}
-                        </p>
-                      </div>
-                    )}
+        {/* Question Review Section */}
+        <div style={{ marginTop: "1.5rem", borderTop: "2px solid #e5e7eb", paddingTop: "1.5rem" }}>
+          <h3 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1f2937", marginBottom: "1rem" }}>
+            Detailed Question Review
+          </h3>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", maxHeight: "500px", overflowY: "auto" }}>
+            {mockTestQuestions.map((question, idx) => {
+              const userAnswer = mockTestAnswers[idx] || [];
+              const isCorrect = userAnswer[0] === question.correctAnswerKey;
+              
+              return (
+                <div 
+                  key={idx} 
+                  style={{
+                    padding: "1rem",
+                    borderRadius: "12px",
+                    border: `2px solid ${isCorrect ? "#10b981" : "#ef4444"}`,
+                    backgroundColor: isCorrect ? "#f0fdf4" : "#fef2f2"
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
+                    <span style={{ fontWeight: "700", fontSize: "1rem", color: isCorrect ? "#059669" : "#dc2626" }}>
+                      Q{idx + 1}
+                    </span>
+                    <span style={{ 
+                      padding: "0.25rem 0.5rem", 
+                      borderRadius: "4px", 
+                      fontSize: "0.75rem",
+                      fontWeight: "600",
+                      backgroundColor: isCorrect ? "#10b981" : "#ef4444",
+                      color: "white"
+                    }}>
+                      {isCorrect ? "✓" : "✗"}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
-          </div>
 
-          <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
-            <button onClick={handleBackToHome} style={{ padding: "0.75rem 2rem", backgroundColor: "#3b82f6", color: "white", border: "none", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }}>
-              Back to Home
-            </button>
-            <button onClick={startMockTest} style={{ padding: "0.75rem 2rem", backgroundColor: "#10b981", color: "white", border: "none", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }}>
-              Retake Mock Test
-            </button>
+                  <p style={{ fontSize: "0.875rem", fontWeight: "600", color: "#1f2937", marginBottom: "0.75rem", lineHeight: "1.4" }}>
+                    {question.stem}
+                  </p>
+
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    <p style={{ fontSize: "0.75rem", color: "#6b7280", marginBottom: "0.25rem" }}>
+                      <strong>Your Answer:</strong> {userAnswer.length > 0 ? userAnswer[0] : "Not answered"}
+                    </p>
+                  </div>
+
+                  <div style={{ marginBottom: "0.75rem" }}>
+                    <p style={{ fontSize: "0.75rem", color: "#6b7280", marginBottom: "0.25rem" }}>
+                      <strong>Correct:</strong> {question.correctAnswerKey}
+                    </p>
+                  </div>
+
+                  {question.rationale && (
+                    <div style={{ backgroundColor: "#dbeafe", padding: "0.75rem", borderRadius: "6px", borderLeft: "3px solid #3b82f6" }}>
+                      <p style={{ fontSize: "0.75rem", fontWeight: "700", color: "#1e40af", marginBottom: "0.25rem" }}>
+                        Rationale:
+                      </p>
+                      <p style={{ fontSize: "0.75rem", color: "#1e3a8a", lineHeight: "1.5", margin: 0 }}>
+                        {question.rationale}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   // SUBJECT QUIZ VIEW
   const subject = subjects.find(s => s.id === selectedCategory);
   if (!currentQuestion) return <div style={{ padding: "2rem", textAlign: "center" }}>Loading questions...</div>;
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb", padding: "1rem" }}>
+// ✅ CORRECT - Use only shorthand
+<div style={{ 
+  padding: "2rem 2rem 1rem 2rem" 
+}}>
       <div style={{ maxWidth: "800px", margin: "0 auto", backgroundColor: "white", borderRadius: "16px", boxShadow: "0 10px 25px rgba(0,0,0,0.1)", padding: "1.5rem" }}>
         <div style={{ marginBottom: "1.5rem" }}>
           <button onClick={() => setCurrentView("home")} style={{ backgroundColor: "#e5e7eb", color: "#374151", padding: "0.5rem 1rem", borderRadius: "8px", border: "none", cursor: "pointer", marginBottom: "1rem", fontWeight: "600" }}>← Back to Home</button>
